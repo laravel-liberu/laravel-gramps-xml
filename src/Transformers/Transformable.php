@@ -14,9 +14,7 @@ trait Transformable
     /**
      * Add a transformer to the output.
      *
-     * @param Transformer|string $transformer
      * @psalm-param Transformer|class-string<Transformer> $transformer
-     *
      * @return self
      */
     public function addTransformer(Transformer | string $transformer): self

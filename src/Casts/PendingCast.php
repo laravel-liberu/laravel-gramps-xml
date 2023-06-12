@@ -8,10 +8,8 @@ class PendingCast
 {
     /**
      * Create a new PendingTransform.
-     *
-     * @param Closure $resolve
      */
-    public function __construct(private Closure $resolve)
+    public function __construct(private readonly Closure $resolve)
     {
     }
 

@@ -27,12 +27,9 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
 
     private XMLObject $items;
 
-    private XMLElement $raw;
-
-    public function __construct(XMLElement $items)
+    public function __construct(private readonly XMLElement $raw)
     {
-        $this->raw = $items;
-        $this->items = new XMLObject((array) $items);
+        $this->items = new XMLObject((array) $raw);
     }
 
     /**
@@ -58,8 +55,6 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
     /**
      * Pass overloaded methods to the items.
      *
-     * @param string $name
-     * @param array  $arguments
      *
      * @return mixed
      */
@@ -71,7 +66,6 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
     /**
      * Get a item from the xml.
      *
-     * @param string $key
      *
      * @return mixed
      */
@@ -82,9 +76,6 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
 
     /**
      * Update a value in the XML.
-     *
-     * @param string $name
-     * @param mixed  $value
      */
     public function __set(string $name, mixed $value): void
     {
@@ -94,7 +85,6 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
     /**
      * Check if an item in the xml isset.
      *
-     * @param string $name
      *
      * @return bool
      */
@@ -116,7 +106,6 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
     /**
      * Start a transform for the given key.
      *
-     * @param string $key
      *
      * @return PendingTransform
      */
@@ -138,7 +127,6 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
     /**
      * Start a cast for the given key.
      *
-     * @param string $key
      *
      * @return PendingCast
      */
@@ -146,9 +134,7 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
     {
         return new PendingCast(function (string $cast) use ($key) {
             if (is_array($this->items[ $key ])) {
-                $this->items[ $key ] = array_map(static function (mixed $item) use ($cast): mixed {
-                    return Cast::to((array) $item, $cast);
-                }, $this->items[ $key ]);
+                $this->items[ $key ] = array_map(static fn(mixed $item): mixed => Cast::to((array) $item, $cast), $this->items[ $key ]);
 
                 return $this;
             }
@@ -178,7 +164,6 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
     /**
      * Determine if an item exists at an offset.
      *
-     * @param mixed        $offset
      *
      * @psalm-param string $offset
      * @return bool
@@ -191,7 +176,6 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
     /**
      * Get an item at a given offset.
      *
-     * @param mixed        $offset
      *
      * @psalm-param string $offset
      * @return mixed
@@ -204,8 +188,6 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
     /**
      * Set the item at a given offset.
      *
-     * @param mixed             $offset
-     * @param mixed             $value
      *
      * @psalm-param string|null $offset
      * @return void
@@ -222,7 +204,6 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
     /**
      * Unset the item at a given offset.
      *
-     * @param mixed        $offset
      *
      * @psalm-param string $offset
      * @return void
@@ -245,7 +226,6 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
     /**
      * Convert the collection to its string representation.
      *
-     * @param int $options
      *
      * @return string
      */
@@ -267,7 +247,7 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
             }
 
             if ($value instanceof Jsonable) {
-                return json_decode($value->toJson(), true);
+                return json_decode($value->toJson(), true, 512, JSON_THROW_ON_ERROR);
             }
 
             if ($value instanceof Arrayable) {
@@ -323,8 +303,6 @@ class XMLCollection implements ArrayAccess, Countable, IteratorAggregate, JsonSe
     /**
      * Recursively optimize the xml using the chosen method.
      *
-     * @param array                        $items
-     * @param Closure                      $callback
      *
      * @psalm-param Closure(string):string $callback
      *

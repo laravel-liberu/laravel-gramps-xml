@@ -58,7 +58,6 @@ class XMLObject implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     /**
      * Get a item from the xml.
      *
-     * @param string $key
      *
      * @return mixed
      */
@@ -70,8 +69,6 @@ class XMLObject implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     /**
      * Set a item in the xml.
      *
-     * @param string $key
-     * @param mixed  $value
      *
      * @return void
      */
@@ -83,7 +80,6 @@ class XMLObject implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     /**
      * Check if a item exists in the xml.
      *
-     * @param string $name
      *
      * @return mixed
      */
@@ -105,7 +101,6 @@ class XMLObject implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     /**
      * Determine if an item exists at an offset.
      *
-     * @param mixed $offset
      *
      * @psalm-param string $offset
      * @return bool
@@ -118,7 +113,6 @@ class XMLObject implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     /**
      * Get an item at a given offset.
      *
-     * @param mixed $offset
      *
      * @psalm-param string $offset
      * @return mixed
@@ -131,8 +125,6 @@ class XMLObject implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     /**
      * Set the item at a given offset.
      *
-     * @param mixed $offset
-     * @param mixed $value
      *
      * @psalm-param string|null $offset
      * @return void
@@ -149,7 +141,6 @@ class XMLObject implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     /**
      * Unset the item at a given offset.
      *
-     * @param mixed        $offset
      *
      * @psalm-param string $offset
      * @return void
@@ -172,7 +163,6 @@ class XMLObject implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
     /**
      * Convert the collection to its string representation.
      *
-     * @param int $options
      *
      * @return string
      */
@@ -194,7 +184,7 @@ class XMLObject implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
             }
 
             if ($value instanceof Jsonable) {
-                return json_decode($value->toJson(), true);
+                return json_decode($value->toJson(), true, 512, JSON_THROW_ON_ERROR);
             }
 
             if ($value instanceof Arrayable) {
@@ -219,8 +209,6 @@ class XMLObject implements ArrayAccess, Countable, IteratorAggregate, JsonSerial
      */
     public function toArray(): array
     {
-        return array_map(function ($value) {
-            return $value instanceof Arrayable ? $value->toArray() : $value;
-        }, $this->get());
+        return array_map(fn($value) => $value instanceof Arrayable ? $value->toArray() : $value, $this->get());
     }
 }

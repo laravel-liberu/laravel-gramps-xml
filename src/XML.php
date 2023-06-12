@@ -15,17 +15,17 @@ class XML
     /**
      * Optimize with underscores type.
      */
-    public const OPTIMIZE_UNDERSCORE = 'underscore';
+    final public const OPTIMIZE_UNDERSCORE = 'underscore';
 
     /**
      * Optimize as camelCase type.
      */
-    public const OPTIMIZE_CAMELCASE = 'camelcase';
+    final public const OPTIMIZE_CAMELCASE = 'camelcase';
 
     /**
      * No optimization
      */
-    public const OPTIMIZE_NONE = 'none';
+    final public const OPTIMIZE_NONE = 'none';
 
     /**
      * Export a array to xml.

@@ -17,17 +17,14 @@ class PendingTransform
 
     /**
      * Create a new PendingTransform.
-     *
-     * @param Closure $resolve
      */
-    public function __construct(private Closure $resolve)
+    public function __construct(private readonly Closure $resolve)
     {
     }
 
     /**
      * Transform using a alias.
      *
-     * @param string $alias
      *
      * @return mixed
      * @throws UnknownTransformException
@@ -44,7 +41,6 @@ class PendingTransform
     /**
      * Transform and resolve using a transformer.
      *
-     * @param string $transformer
      *
      * @return mixed
      */

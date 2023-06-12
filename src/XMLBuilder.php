@@ -73,7 +73,6 @@ class XMLBuilder
     /**
      * Set the data.
      *
-     * @param array $data
      *
      * @return XMLBuilder
      */
@@ -87,8 +86,6 @@ class XMLBuilder
     /**
      * Handle dynamic setters for `version`, `rootTag`, `itemName` and `encoding`.
      *
-     * @param string $name
-     * @param array  $arguments
      *
      * @return $this
      */
